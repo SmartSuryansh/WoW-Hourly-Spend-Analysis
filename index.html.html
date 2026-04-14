@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartSign USA — Weekly Ad Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090d;--card:#0e1219;--card2:#131a24;--border:#1a2840;
+  --text:#e4eaf4;--sub:#8da4c2;--dim:#4a6585;
+  --cyan:#00d4ff;--lime:#a3e635;--gold:#fbbf24;--red:#ef4444;--teal:#2dd4bf;--purple:#a78bfa;
+  --mono:'JetBrains Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+.page{max-width:1300px;margin:0 auto;padding:48px 32px 100px;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(0,212,255,0.08)}50%{box-shadow:0 0 40px rgba(0,212,255,0.15)}}
+.anim{animation:fadeUp .6s ease both;}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}.d6{animation-delay:.6s}
+
+/* HERO HEADER */
+.hero{text-align:center;padding:20px 0 48px;border-bottom:1px solid var(--border);margin-bottom:48px;}
+.hero-tag{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;opacity:.8;}
+.hero h1{font-family:var(--mono);font-size:clamp(24px,4vw,40px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:8px;}
+.hero h1 em{font-style:normal;color:var(--gold);position:relative;}
+.hero h1 em::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:3px;background:var(--gold);border-radius:2px;opacity:.4;}
+.hero-sub{font-family:var(--mono);font-size:12px;color:var(--dim);margin-top:12px;line-height:1.7;}
+.hero-sub span{color:var(--sub);}
+.hero-caps{display:inline-flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:16px;}
+.cap-pill{font-family:var(--mono);font-size:10px;padding:4px 12px;border-radius:20px;letter-spacing:.5px;}
+.cap-pill.w1{background:rgba(0,212,255,0.1);color:var(--cyan);border:1px solid rgba(0,212,255,0.25);}
+.cap-pill.w2{background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.25);}
+
+/* SECTION */
+.section{margin-bottom:56px;}
+.sec-head{margin-bottom:24px;}
+.sec-num{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;}
+.sec-title{font-family:var(--sans);font-size:22px;font-weight:700;color:#fff;letter-spacing:-.3px;}
+.sec-title small{font-size:13px;font-weight:400;color:var(--sub);margin-left:8px;}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.kpi-grid{grid-template-columns:1fr;}}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;position:relative;overflow:hidden;transition:border-color .3s;}
+.kpi:hover{border-color:rgba(0,212,255,0.3);}
+.kpi-label{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.kpi-val{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1.1;}
+.kpi-delta{font-family:var(--mono);font-size:12px;margin-top:6px;font-weight:600;}
+.kpi .glow{position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;filter:blur(40px);opacity:.15;pointer-events:none;}
+.pos{color:var(--lime)}.neg{color:var(--red)}.neu{color:var(--dim)}
+
+/* HIGHLIGHT KPI */
+.kpi-highlight{background:linear-gradient(135deg,rgba(163,230,53,0.06),rgba(0,212,255,0.04));border:1px solid rgba(163,230,53,0.2);animation:glowPulse 3s ease infinite;}
+.kpi-highlight .kpi-val{color:var(--lime);}
+
+/* CHART CARD */
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;position:relative;overflow:hidden;}
+.chart-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0;}
+.chart-card.c1::before{background:linear-gradient(90deg,var(--cyan),transparent 70%);}
+.chart-card.c2::before{background:linear-gradient(90deg,var(--lime),transparent 70%);}
+.chart-card.c3::before{background:linear-gradient(90deg,var(--gold),transparent 70%);}
+.chart-card.c4::before{background:linear-gradient(90deg,var(--teal),transparent 70%);}
+.chart-head{font-family:var(--mono);font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;}
+.chart-sub{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;}
+.chart-wrap{position:relative;height:280px;width:100%;}
+.chart-wrap canvas{display:block;}
+
+/* VOICE LINE - 1 line under every chart */
+.voice{font-family:var(--sans);font-size:13px;color:var(--sub);margin-top:14px;padding:10px 16px;background:rgba(255,255,255,0.02);border-radius:8px;border-left:3px solid var(--gold);line-height:1.5;}
+.voice b{color:#fff;font-weight:600;}
+.voice .up{color:var(--lime);font-weight:600;}
+.voice .dn{color:var(--red);font-weight:600;}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:860px){.two-col{grid-template-columns:1fr;}}
+
+/* HEATMAP */
+.hm-wrap{overflow-x:auto;}
+.hm{border-collapse:collapse;width:100%;min-width:740px;font-family:var(--mono);font-size:11px;}
+.hm th{padding:7px 8px;color:var(--dim);font-weight:400;text-align:center;border-bottom:1px solid var(--border);font-size:10px;}
+.hm th:first-child{text-align:left;width:64px;}
+.hm td{padding:6px 7px;text-align:center;border:1px solid rgba(26,40,64,0.4);font-weight:600;font-size:11px;transition:transform .15s;}
+.hm tr:hover td{transform:scale(1.02);}
+.hm .hr{text-align:left;color:var(--dim);background:var(--card)!important;font-weight:400;}
+
+/* SCORECARD TABLE */
+.sc{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;}
+.sc th{padding:10px 12px;color:var(--dim);font-weight:400;text-align:center;border-bottom:1px solid var(--border);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;}
+.sc th:first-child{text-align:left;}
+.sc td{padding:10px 12px;text-align:center;border-bottom:1px solid rgba(26,40,64,0.3);font-size:12px;}
+.sc td:first-child{text-align:left;font-weight:600;color:#fff;}
+.sc .best{background:rgba(163,230,53,0.06);}
+.sc .worst{background:rgba(239,68,68,0.06);}
+
+/* T-SALES CARDS */
+.ts-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+@media(max-width:860px){.ts-grid{grid-template-columns:repeat(3,1fr);}}
+.ts{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;transition:border-color .3s;}
+.ts:hover{border-color:rgba(45,212,191,0.3);}
+.ts-day{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.ts-val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--teal);}
+.ts-units{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:4px;}
+.ts-bar{height:4px;border-radius:2px;margin-top:8px;background:var(--border);overflow:hidden;}
+.ts-bar-fill{height:100%;border-radius:2px;transition:width .8s ease;}
+
+/* TAKEAWAYS */
+.takeaways{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:14px;padding:32px;position:relative;overflow:hidden;}
+.takeaways::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--gold),var(--lime));}
+.tk-title{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;}
+.tk-list{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.tk-list li{font-family:var(--sans);font-size:14px;color:var(--text);line-height:1.6;padding-left:20px;position:relative;}
+.tk-list li::before{content:'→';position:absolute;left:0;color:var(--cyan);font-weight:700;}
+.tk-list li strong{color:var(--gold);}
+.tk-list li .up{color:var(--lime);font-weight:600;}
+.tk-list li .dn{color:var(--red);font-weight:600;}
+
+.rec-box{margin-top:24px;padding:20px 24px;background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.2);border-radius:10px;}
+.rec-box .rec-title{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.rec-box p{font-family:var(--sans);font-size:14px;color:var(--text);line-height:1.6;}
+.cap-tag{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px;margin:0 2px;vertical-align:middle;}
+.cap-tag.amz{background:rgba(0,212,255,0.1);color:var(--cyan);border:1px solid rgba(0,212,255,0.25);}
+.cap-tag.sel{background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.25);}
+.cap-tag.new{background:rgba(163,230,53,0.1);color:var(--lime);border:1px solid rgba(163,230,53,0.25);}
+
+/* DAY DETAIL GRID */
+.day-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:860px){.day-grid{grid-template-columns:1fr;}}
+.day-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;position:relative;overflow:hidden;}
+.day-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0;}
+.day-card.ok::before{background:linear-gradient(90deg,var(--lime),transparent 70%);}
+.day-card.warn::before{background:linear-gradient(90deg,var(--gold),transparent 70%);}
+.day-card.bad::before{background:linear-gradient(90deg,var(--red),transparent 70%);}
+.day-card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;flex-wrap:wrap;gap:6px;}
+.day-card-title{font-family:var(--mono);font-size:14px;font-weight:700;color:#fff;}
+.day-card-stats{display:flex;gap:12px;font-family:var(--mono);font-size:10px;}
+.day-card-stats span{padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.04);}
+.day-canvas{position:relative;height:200px;width:100%;}
+.day-canvas canvas{display:block;}
+.day-tsales{margin-top:10px;padding:10px 14px;background:rgba(45,212,191,0.04);border:1px solid rgba(45,212,191,0.15);border-radius:8px;font-family:var(--sans);font-size:12px;color:var(--sub);line-height:1.5;}
+.day-tsales b{color:var(--teal);}
+.day-tsales .dn{color:var(--red);font-weight:600;}
+.day-tsales .up{color:var(--lime);font-weight:600;}
+.day-full{grid-column:1/-1;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero anim">
+  <div class="hero-tag">SmartSign USA · Seller Central</div>
+  <h1>The <em>Multi-Cap</em> Experiment</h1>
+  <div class="hero-sub">
+    <span>29 Mar – 4 Apr</span> vs <span>5 – 11 Apr</span> &nbsp;·&nbsp; Hourly Spend & Sales &nbsp;·&nbsp; Budget Cap Impact
+  </div>
+  <div class="hero-caps">
+    <span class="cap-pill w1">W1 → 2:30 PM only (Selva)</span>
+    <span class="cap-pill w2">W2 → 4 AM · 7 AM (Amazon) + 2 PM · 5 PM (Selva)</span>
+  </div>
+</div>
+
+<!-- ═══════ 01 · THE SCORECARD ═══════ -->
+<div class="section anim d1">
+  <div class="sec-head">
+    <div class="sec-num">01 — The Scorecard</div>
+    <div class="sec-title">Where do we stand this week?</div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="glow" style="background:var(--cyan)"></div>
+      <div class="kpi-label">Total Spend · W1</div>
+      <div class="kpi-val" style="color:var(--cyan)">$87,210</div>
+    </div>
+    <div class="kpi">
+      <div class="glow" style="background:var(--lime)"></div>
+      <div class="kpi-label">Total Spend · W2</div>
+      <div class="kpi-val" style="color:var(--lime)">$83,383</div>
+      <div class="kpi-delta neg">▼ $3,827 (–4.4%)</div>
+    </div>
+    <div class="kpi">
+      <div class="glow" style="background:var(--red)"></div>
+      <div class="kpi-label">Ad Sales · W1 → W2</div>
+      <div class="kpi-val" style="color:#fff">$253K <span style="color:var(--red);font-size:16px;">→ $238K</span></div>
+      <div class="kpi-delta neg">▼ $15,470 in ad sales (–6.1%)</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">ROAS · W1</div>
+      <div class="kpi-val" style="color:var(--cyan)">2.90x</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">ROAS · W2</div>
+      <div class="kpi-val" style="color:var(--lime)">2.85x</div>
+      <div class="kpi-delta neg">▼ 0.05x</div>
+    </div>
+    <div class="kpi kpi-highlight">
+      <div class="glow" style="background:var(--lime)"></div>
+      <div class="kpi-label">🔥 Evening Sales · W2</div>
+      <div class="kpi-val">$4,831</div>
+      <div class="kpi-delta pos">Was $84 in W1 — 57× increase</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+    <div class="kpi">
+      <div class="kpi-label">PM Spend (12P–11P) · W2</div>
+      <div class="kpi-val" style="color:var(--lime);font-size:22px;">$22,122</div>
+      <div class="kpi-delta pos">▲ $3,471 vs W1 (+18.6%) — more PM budget deployed</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">PM Sales (12P–11P) · W2</div>
+      <div class="kpi-val" style="color:var(--red);font-size:22px;">$50,378</div>
+      <div class="kpi-delta neg">▼ $5,075 vs W1 (–9.2%) — 12 PM dead zone killed the gains</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ 02 · HOURLY CURVES ═══════ -->
+<div class="section anim d2">
+  <div class="sec-head">
+    <div class="sec-num">02 — The Hourly Picture</div>
+    <div class="sec-title">When does the budget run out?</div>
+  </div>
+  <div class="two-col">
+    <div class="chart-card c1">
+      <div class="chart-head">Hourly Ad Spend</div>
+      <div class="chart-sub">Sun–Sat Weekly Total</div>
+      <div class="chart-wrap"><canvas id="wow_spend"></canvas></div>
+      <div class="voice"><b>Evening alive, noon dead.</b> W2 sustains spend into <span class="up">6–9 PM</span> but <span class="dn">12 PM collapsed –67%</span> — budget exhausts before the 2 PM cap.</div>
+    </div>
+    <div class="chart-card c2">
+      <div class="chart-head">Hourly Ad Sales</div>
+      <div class="chart-sub">Sun–Sat Weekly Total</div>
+      <div class="chart-wrap"><canvas id="wow_sales"></canvas></div>
+      <div class="voice"><b>1 PM surged +$4,126</b> once the 2 PM cap restores budget. But <span class="dn">12 PM lost $12,037</span> — the single biggest hourly revenue drop of the week.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ 03 · DAY-BY-DAY BARS ═══════ -->
+<div class="section anim d3">
+  <div class="sec-head">
+    <div class="sec-num">03 — Day by Day</div>
+    <div class="sec-title">Which days won, which days broke?</div>
+  </div>
+  <div class="two-col">
+    <div class="chart-card c3">
+      <div class="chart-head">Daily Ad Spend — Mon to Fri</div>
+      <div class="chart-sub">W1 vs W2</div>
+      <div class="chart-wrap"><canvas id="day_spend"></canvas></div>
+      <div class="voice"><b>Wednesday led.</b> Highest W2 spend ($18.5K) — the multi-cap cadence kept campaigns alive through 5 PM.</div>
+    </div>
+    <div class="chart-card c3">
+      <div class="chart-head">Daily Ad Sales — Mon to Fri</div>
+      <div class="chart-sub">W1 vs W2</div>
+      <div class="chart-wrap"><canvas id="day_sales"></canvas></div>
+      <div class="voice"><b>Every day lost sales vs last week.</b> Thursday (–$3,687) and Tuesday (–$3,397) were the biggest drops.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ 04 · SAME-DAY SCORECARD ═══════ -->
+<div class="section anim d4">
+  <div class="sec-head">
+    <div class="sec-num">04 — Same Day Last Week</div>
+    <div class="sec-title">Each day vs its W1 counterpart</div>
+  </div>
+  <div class="chart-card c4">
+    <table class="sc">
+      <thead>
+        <tr><th style="text-align:left">Day</th><th>W2 Spend</th><th>W1 Spend</th><th>Δ Spend</th><th>W2 Sales</th><th>W1 Sales</th><th>Δ Sales</th><th>W2 ROAS</th><th>Δ ROAS</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mon 6 Apr<br><span style="color:var(--dim);font-size:10px;">vs Mon 30 Mar</span></td>
+          <td>$15,437</td><td>$15,067</td><td class="neg">+$370</td>
+          <td>$47,024</td><td>$47,521</td><td class="neg">–$497</td>
+          <td>3.05x</td><td class="neg">–0.10</td>
+        </tr>
+        <tr>
+          <td>Tue 7 Apr<br><span style="color:var(--dim);font-size:10px;">vs Tue 31 Mar</span></td>
+          <td>$16,988</td><td>$19,043</td><td class="pos">–$2,055</td>
+          <td>$49,462</td><td>$52,859</td><td class="neg">–$3,397</td>
+          <td>2.91x</td><td class="pos">+0.13</td>
+        </tr>
+        <tr class="best">
+          <td>Wed 8 Apr ⭐<br><span style="color:var(--dim);font-size:10px;">vs Wed 1 Apr</span></td>
+          <td>$18,458</td><td>$17,077</td><td class="neg">+$1,381</td>
+          <td>$53,054</td><td>$55,572</td><td class="neg">–$2,518</td>
+          <td>2.87x</td><td class="neg">–0.38</td>
+        </tr>
+        <tr>
+          <td>Thu 9 Apr<br><span style="color:var(--dim);font-size:10px;">vs Thu 2 Apr</span></td>
+          <td>$16,126</td><td>$17,767</td><td class="pos">–$1,641</td>
+          <td>$48,014</td><td>$51,701</td><td class="neg">–$3,687</td>
+          <td>2.98x</td><td class="pos">+0.07</td>
+        </tr>
+        <tr class="worst">
+          <td>Fri 10 Apr ⚠️<br><span style="color:var(--dim);font-size:10px;">vs Fri 3 Apr</span></td>
+          <td>$13,306</td><td>$13,591</td><td class="pos">–$285</td>
+          <td>$33,354</td><td>$34,952</td><td class="neg">–$1,598</td>
+          <td>2.51x</td><td class="neg">–0.06</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="voice"><b>Tue & Thu ROAS improved</b> — the spend that happened was more efficient. <b>Wed was the best day</b> for sustained PM coverage. <b>Fri was worst</b> — 2.51x ROAS with a 5-hour PM blackout.</div>
+  </div>
+</div>
+
+<!-- ═══════ 05 · PM HEATMAP ═══════ -->
+<div class="section anim d5">
+  <div class="sec-head">
+    <div class="sec-num">05 — The PM Heatmap</div>
+    <div class="sec-title">Where exactly does the budget die? <small>12 PM – 9 PM · Spend by hour × day</small></div>
+  </div>
+  <div class="chart-card c3">
+    <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
+      <span style="font-family:var(--mono);font-size:10px;color:var(--lime);">■ Green = active spend</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--gold);">■ Amber = low spend</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--red);">■ Red/Black = out of budget</span>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--gold);">⚡ = Cap adjustment hour</span>
+    </div>
+    <div class="hm-wrap"><table class="hm" id="heatmap_table"></table></div>
+    <div class="voice"><b>12 PM is dark across Tue–Fri in W2.</b> The 2 PM cap revives 1–3 PM (green). The <span class="up">5 PM cap lights up the evening</span> — Tue & Fri show spend through 8 PM.</div>
+  </div>
+</div>
+
+<!-- ═══════ 06 · EVENING DEEP DIVE ═══════ -->
+<div class="section anim d5">
+  <div class="sec-head">
+    <div class="sec-num">06 — The Evening Win</div>
+    <div class="sec-title">The 5 PM cap created a new revenue window</div>
+  </div>
+  <div class="chart-card c2">
+    <div class="chart-head">Evening Ad Sales by Day (6–9 PM)</div>
+    <div class="chart-sub">W2 Only — This window was completely dead in W1</div>
+    <div class="chart-wrap"><canvas id="evening_chart"></canvas></div>
+    <div class="voice"><b>Friday evening ($3,160) was its strongest PM window</b> — ironically because the afternoon was blacked out. <b>Tue ($2,154)</b> also strong. This window didn't exist 2 weeks ago.</div>
+  </div>
+</div>
+
+<!-- ═══════ 07 · HOURLY T-SALES IMPACT ═══════ -->
+<div class="section anim d5">
+  <div class="sec-head">
+    <div class="sec-num">07 — Hourly Impact on Total Sales</div>
+    <div class="sec-title">When ads die, total revenue dies with them <small>Seller Central hourly graphs vs ad data</small></div>
+  </div>
+  <div class="day-grid">
+
+    <div class="day-card ok">
+      <div class="day-card-head">
+        <div class="day-card-title">Mon 6 Apr</div>
+        <div class="day-card-stats">
+          <span style="color:var(--lime)">T-Sales $97,862</span>
+          <span style="color:var(--sub)">3,928 units</span>
+        </div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:8px;">Ad Spend (lime) · Ad Sales (cyan) · Red zone = budget dead (&lt;$50)</div>
+      <div class="day-canvas"><canvas id="day_mon"></canvas></div>
+      <div class="day-tsales">
+        <b>Seller Central graph confirms:</b> Total sales peaked at ~$16K/hr at 9–10 AM. A visible <span class="dn">dip at 6 AM</span> matches the ad blackout ($45 spend — morning cap exhausted). Sales held through 2 PM because ads ran until 3 PM, then <span class="dn">total sales cratered when ads died at 3 PM</span>.
+      </div>
+    </div>
+
+    <div class="day-card warn">
+      <div class="day-card-head">
+        <div class="day-card-title">Tue 7 Apr</div>
+        <div class="day-card-stats">
+          <span style="color:var(--lime)">T-Sales $121,531</span>
+          <span style="color:var(--sub)">4,888 units</span>
+        </div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:8px;">Ad Spend (lime) · Ad Sales (cyan) · Red zone = budget dead (&lt;$50)</div>
+      <div class="day-canvas"><canvas id="day_tue"></canvas></div>
+      <div class="day-tsales">
+        <b>Seller Central graph confirms:</b> T-Sales showed a <span class="dn">sharp cliff at 12 PM</span> (ad spend = $7). Recovery at 1 PM visible in both ad and total sales. A <span class="dn">second dip at 4 PM</span> (ad spend = $5), then <span class="up">evening bump at 5–6 PM</span> when the 5 PM cap restored budget ($1,097 at 6 PM).
+      </div>
+    </div>
+
+    <div class="day-card ok">
+      <div class="day-card-head">
+        <div class="day-card-title">Wed 8 Apr ⭐</div>
+        <div class="day-card-stats">
+          <span style="color:var(--lime)">T-Sales $116,675</span>
+          <span style="color:var(--sub)">4,624 units</span>
+        </div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:8px;">Ad Spend (lime) · Ad Sales (cyan) · Red zone = budget dead (&lt;$50)</div>
+      <div class="day-canvas"><canvas id="day_wed"></canvas></div>
+      <div class="day-tsales">
+        <b>Seller Central graph confirms:</b> Best PM day. <span class="dn">Brief 12 PM dip</span> ($19 ad spend), but 1–5 PM sustained spending kept the T-Sales curve <span class="up">elevated through the entire afternoon</span>. Total sales maintained $5K–8K/hr through 3 PM. This is what the multi-cap strategy looks like when it works.
+      </div>
+    </div>
+
+    <div class="day-card warn">
+      <div class="day-card-head">
+        <div class="day-card-title">Thu 9 Apr</div>
+        <div class="day-card-stats">
+          <span style="color:var(--lime)">T-Sales $112,382</span>
+          <span style="color:var(--sub)">4,669 units</span>
+        </div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:8px;">Ad Spend (lime) · Ad Sales (cyan) · Red zone = budget dead (&lt;$50)</div>
+      <div class="day-canvas"><canvas id="day_thu"></canvas></div>
+      <div class="day-tsales">
+        <b>Seller Central graph confirms:</b> T-Sales graph shows a <span class="dn">visible noon crater</span> exactly at 12 PM ($13 ad spend). 1–3 PM recovered after the 2 PM cap, then <span class="dn">dropped again at 5 PM ($1 spend)</span>. The Seller Central curve vs same-day-last-week (Thu 2 Apr) shows W2's noon dip was sharper and earlier.
+      </div>
+    </div>
+
+    <div class="day-card bad day-full">
+      <div class="day-card-head">
+        <div class="day-card-title">Fri 10 Apr ⚠️</div>
+        <div class="day-card-stats">
+          <span style="color:var(--red)">T-Sales $89,235</span>
+          <span style="color:var(--sub)">3,736 units</span>
+          <span style="color:var(--red)">Worst day</span>
+        </div>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:8px;">Ad Spend (lime) · Ad Sales (cyan) · Red zone = budget dead (&lt;$50)</div>
+      <div class="day-canvas"><canvas id="day_fri"></canvas></div>
+      <div class="day-tsales">
+        <b>Seller Central graph confirms:</b> T-Sales <span class="dn">flatlined from 12 PM to 4 PM</span> — 5 consecutive hours of near-zero ad spend ($22 total across 12–4 PM). The T-Sales curve dropped to near $0 where last year's same-day maintained $5K+/hr. <span class="up">Evening recovery visible at 5–8 PM</span> when the 5 PM cap kicked in — proving the audience was there, budget wasn't. Friday's total sales ($89K) were <span class="dn">27% below Tuesday's $122K</span>.
+      </div>
+    </div>
+
+  </div>
+  <div class="voice" style="margin-top:20px;"><b>Pattern proven across all 5 days:</b> Every hour where ad spend drops below $50, the Seller Central total sales graph shows a corresponding drop — confirming ads don't just generate direct sales, they <b>drive organic discoverability</b> too.</div>
+</div>
+
+<!-- ═══════ 08 · TOTAL SALES CONTEXT ═══════ -->
+<div class="section anim d6">
+  <div class="sec-head">
+    <div class="sec-num">08 — Total Sales (Organic + Ad)</div>
+    <div class="sec-title">When ads go dark, total revenue drops</div>
+  </div>
+  <div class="ts-grid">
+    <div class="ts">
+      <div class="ts-day">Mon 6 Apr</div>
+      <div class="ts-val">$97.9K</div>
+      <div class="ts-units">3,928 units · Ad 48%</div>
+      <div class="ts-bar"><div class="ts-bar-fill" style="width:80%;background:var(--teal);"></div></div>
+    </div>
+    <div class="ts" style="border-color:rgba(163,230,53,0.3);">
+      <div class="ts-day">Tue 7 Apr</div>
+      <div class="ts-val">$121.5K</div>
+      <div class="ts-units">4,888 units · Ad 41%</div>
+      <div class="ts-bar"><div class="ts-bar-fill" style="width:100%;background:var(--lime);"></div></div>
+    </div>
+    <div class="ts">
+      <div class="ts-day">Wed 8 Apr</div>
+      <div class="ts-val">$116.7K</div>
+      <div class="ts-units">4,624 units · Ad 45%</div>
+      <div class="ts-bar"><div class="ts-bar-fill" style="width:96%;background:var(--teal);"></div></div>
+    </div>
+    <div class="ts">
+      <div class="ts-day">Thu 9 Apr</div>
+      <div class="ts-val">$112.4K</div>
+      <div class="ts-units">4,669 units · Ad 43%</div>
+      <div class="ts-bar"><div class="ts-bar-fill" style="width:92%;background:var(--teal);"></div></div>
+    </div>
+    <div class="ts" style="border-color:rgba(239,68,68,0.3);">
+      <div class="ts-day">Fri 10 Apr ⚠️</div>
+      <div class="ts-val">$89.2K</div>
+      <div class="ts-units">3,736 units · Ad 37%</div>
+      <div class="ts-bar"><div class="ts-bar-fill" style="width:73%;background:var(--red);"></div></div>
+    </div>
+  </div>
+  <div class="voice" style="margin-top:16px;"><b>Friday ($89K) was 27% below Tuesday ($122K).</b> When ads ran through the afternoon (Mon, Wed), total sales stayed above $97K. <b>Ads drive ~45% of total revenue</b> — when they die, organic discovery suffers too.</div>
+</div>
+
+<!-- ═══════ 08 · TAKEAWAYS ═══════ -->
+<div class="section anim d6">
+  <div class="sec-head">
+    <div class="sec-num">09 — Board Summary</div>
+    <div class="sec-title">What worked, what broke, what's next</div>
+  </div>
+  <div class="takeaways">
+    <div class="tk-title">Key Takeaways</div>
+    <ul class="tk-list">
+      <li><strong>The multi-cap strategy partially worked.</strong> PM spend <span class="up">+18.6%</span>, evening sales went from $84 to <span class="up">$4,831 (57× increase)</span>. But overall ad sales still fell <span class="dn">–6.1%</span> because the 12 PM dead zone wiped out the gains.</li>
+      <li><strong>Evening is now a real revenue window.</strong> The 5 PM cap (Selva) unlocked $4,831 in sales that didn't exist before. Tuesday and Friday evenings were the strongest.</li>
+      <li><strong>12 PM is the new bottleneck.</strong> Budget exhausts by noon on Tue–Fri. W2 spent only $2,037 at 12 PM vs W1's $6,182 — a <span class="dn">$12,037 loss</span> in 12 PM sales alone.</li>
+      <li><strong>Wednesday proved the concept.</strong> $18.5K spend, $53K sales, sustained PM activity 1–5 PM. When budget allocation matches demand, the multi-cap structure works end-to-end.</li>
+      <li><strong>Friday was catastrophic.</strong> 5-hour PM dead zone (12–4 PM), only $33K in ad sales, lowest ROAS at 2.51x.</li>
+      <li><strong>ROAS improved on Tue & Thu</strong> — the spend that DID happen was more efficient. The problem is <span class="dn">insufficient total cap</span>, not poor targeting.</li>
+    </ul>
+
+    <div class="rec-box">
+      <div class="rec-title">⚡ Recommendation — Close the 12 PM Gap</div>
+      <p>Add a <span class="cap-tag new">12 PM cap (Selva) — NEW</span> to prevent the noon dead zone. Move from 4 caps to 5:<br>
+      <span class="cap-tag amz">4 AM</span> <span class="cap-tag amz">7 AM</span> <span class="cap-tag new">12 PM ✦</span> <span class="cap-tag sel">2 PM</span> <span class="cap-tag sel">5 PM</span></p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const HOURS=['12A','1A','2A','3A','4A','5A','6A','7A','8A','9A','10A','11A','12P','1P','2P','3P','4P','5P','6P','7P','8P','9P','10P','11P'];
+const HOURS_FULL=['12 AM','1 AM','2 AM','3 AM','4 AM','5 AM','6 AM','7 AM','8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM','6 PM','7 PM','8 PM','9 PM','10 PM','11 PM'];
+const W1C='#00d4ff',W2C='#a3e635',GOLDC='#fbbf24',REDC='#ef4444',TEALC='#2dd4bf';
+const DAYS=['Mon','Tue','Wed','Thu','Fri'];
+const W1_CAPS=[14];
+const W2_CAPS=[4,7,14,17];
+
+const DATA={
+  w1_spend:[575,775,1207,1670,3556,5383,7699,9175,9894,9291,9434,9900,6182,1710,5695,1874,1691,1393,46,25,0,32,3,0],
+  w1_sales:[479,1022,2623,3589,9032,11698,22885,27118,31712,33394,25679,28589,17506,8344,18091,4047,4347,3034,26,40,0,18,0,0],
+  w2_spend:[358,595,866,1579,3082,5204,6339,8439,9431,8828,9187,7353,2037,4715,5742,2768,1538,1677,1970,770,702,203,0,0],
+  w2_sales:[296,410,1519,2915,7569,15470,20427,22246,30302,31635,25962,28674,5469,12470,14681,6117,4206,2604,2818,967,727,319,0,0],
+  d2_sp:[[20,45,87,153,515,833,45,622,1678,1734,1839,2100,2141,1705,1621,49,54,31,37,44,24,18,37,5],
+         [104,106,147,240,259,666,1394,1704,2052,2057,2027,1181,7,1521,1409,407,5,592,1097,9,1,3,0,0],
+         [57,137,180,335,650,1084,1491,1485,1872,1878,1972,1764,19,717,1422,1338,1299,746,7,2,0,3,0,0],
+         [62,106,129,297,647,1065,1390,1955,1902,1682,1861,1611,13,821,1326,1013,223,1,9,0,13,0,0,0],
+         [36,100,206,357,618,960,1212,1511,1557,1574,1534,787,10,10,2,0,0,334,857,758,687,196,0,0]],
+  d2_sl:[[11,20,278,413,1573,2733,97,1386,5139,5650,6064,9952,5542,4368,3559,48,36,60,0,95,0,0,0,0],
+         [62,72,463,332,892,2728,4635,4727,8291,7327,5760,4979,0,3320,2905,815,0,656,1498,0,0,0,0,0],
+         [0,35,289,497,1663,3223,5321,4582,4933,8332,5044,5951,0,2228,3780,2943,2597,1636,0,0,0,0,0,0],
+         [147,103,200,261,1265,3257,3905,5115,5971,6764,4632,5197,0,2620,4449,2358,1584,13,146,0,27,0,0,0],
+         [75,170,209,929,1348,1849,4855,4260,5417,3612,4522,2648,0,0,0,0,0,300,1174,967,700,319,0,0]],
+  d1_sp:[[48,97,219,212,604,708,1054,1539,1744,1799,1858,2091,1810,60,1065,90,63,3,0,0,0,0,3,0],
+         [73,102,188,231,541,965,1345,1789,1861,1891,2098,1968,2078,671,1136,482,958,591,29,17,0,29,0,0],
+         [152,126,225,398,758,1016,1476,1715,2126,1908,1995,1727,22,131,1465,347,669,799,17,5,0,0,0,0],
+         [100,181,195,290,759,1146,1744,1857,1925,2090,1882,1679,1337,840,1375,363,2,0,0,0,0,2,0,0],
+         [128,163,246,377,509,892,1175,1490,1670,1603,1491,1743,867,8,646,581,0,0,0,2,0,0,0,0]],
+  d1_sl:[[0,120,803,145,2563,1965,3498,4069,6319,7345,6910,5892,4933,78,2394,139,348,0,0,0,0,0,0,0],
+         [110,126,256,553,1191,2197,3493,5848,5464,7692,4910,6347,5276,1996,3184,906,2121,1105,26,40,0,18,0,0],
+         [183,162,544,993,1898,2671,5677,4418,7351,5965,6647,6326,20,3152,4357,1401,1878,1929,0,0,0,0,0,0],
+         [38,358,468,677,1231,2180,4751,4577,5865,8359,3863,4589,4541,3118,6450,636,0,0,0,0,0,0,0,0],
+         [109,160,438,906,1285,1699,2358,5980,5377,4033,3128,4205,2601,0,1707,966,0,0,0,0,0,0,0,0]]
+};
+
+function fmt(v){if(v>=1000)return'$'+(v/1000).toFixed(1)+'k';return'$'+v;}
+function fmtFull(v){return'$'+v.toLocaleString();}
+
+const d1_totSp=DATA.d1_sp.map(d=>d.reduce((a,b)=>a+b,0));
+const d1_totSl=DATA.d1_sl.map(d=>d.reduce((a,b)=>a+b,0));
+const d2_totSp=DATA.d2_sp.map(d=>d.reduce((a,b)=>a+b,0));
+const d2_totSl=DATA.d2_sl.map(d=>d.reduce((a,b)=>a+b,0));
+
+/* ── LINE CHART ── */
+function drawLineChart(id,datasets,opts){
+  const canvas=document.getElementById(id);if(!canvas)return;
+  canvas.style.width='100%';canvas.style.height='100%';
+  const dpr=window.devicePixelRatio||1;const ctx=canvas.getContext('2d');
+
+  function render(){
+    const W=canvas.offsetWidth,H=canvas.offsetHeight;
+    canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
+    const PL=54,PR=14,PT=32,PB=54;
+    const pW=W-PL-PR,pH=H-PT-PB,n=opts.labels.length;
+    const allV=datasets.flatMap(d=>d.data);
+    const maxV=Math.max(...allV)*1.1||100;
+    const xp=i=>PL+(i/(n-1))*pW,yp=v=>PT+pH-(v/maxV)*pH;
+
+    ctx.fillStyle='#0e1219';ctx.fillRect(0,0,W,H);
+
+    for(let g=0;g<=4;g++){
+      const v=(maxV/4)*g,y=yp(v);
+      ctx.beginPath();ctx.strokeStyle='#1a2840';ctx.lineWidth=.5;ctx.setLineDash([]);
+      ctx.moveTo(PL,y);ctx.lineTo(PL+pW,y);ctx.stroke();
+      ctx.fillStyle='#4a6585';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='right';
+      ctx.fillText(fmt(v),PL-6,y+4);
+    }
+
+    // W2 cap lines
+    if(opts.w2Caps){
+      const capLabels={4:'4AM',7:'7AM',14:'2PM',17:'5PM'};
+      opts.w2Caps.forEach(ci=>{
+        const x=xp(ci);
+        ctx.beginPath();ctx.strokeStyle='rgba(251,191,36,0.3)';ctx.lineWidth=1.2;ctx.setLineDash([4,4]);
+        ctx.moveTo(x,PT);ctx.lineTo(x,PT+pH);ctx.stroke();ctx.setLineDash([]);
+        ctx.fillStyle='rgba(251,191,36,0.7)';ctx.font='bold 9px JetBrains Mono,monospace';ctx.textAlign='center';
+        ctx.fillText('⚡'+capLabels[ci],x,PT-6);
+      });
+    }
+    if(opts.w1Caps){
+      opts.w1Caps.forEach(ci=>{
+        const x=xp(ci)+6;
+        ctx.fillStyle='rgba(0,212,255,0.4)';ctx.font='8px JetBrains Mono,monospace';ctx.textAlign='center';
+        ctx.fillText('W1·2:30P',x,PT+pH+4);
+      });
+    }
+
+    datasets.forEach(ds=>{
+      ctx.beginPath();ctx.moveTo(xp(0),yp(ds.data[0]));
+      for(let i=1;i<n;i++)ctx.lineTo(xp(i),yp(ds.data[i]));
+      ctx.lineTo(xp(n-1),PT+pH);ctx.lineTo(xp(0),PT+pH);ctx.closePath();
+      const g=ctx.createLinearGradient(0,PT,0,PT+pH);
+      g.addColorStop(0,ds.color+'30');g.addColorStop(1,ds.color+'00');
+      ctx.fillStyle=g;ctx.fill();
+
+      ctx.beginPath();ctx.strokeStyle=ds.color;ctx.lineWidth=2.5;
+      ctx.setLineDash(ds.dashed?[6,4]:[]);ctx.moveTo(xp(0),yp(ds.data[0]));
+      for(let i=1;i<n;i++)ctx.lineTo(xp(i),yp(ds.data[i]));
+      ctx.stroke();ctx.setLineDash([]);
+
+      ds.data.forEach((v,i)=>{
+        const isCap=((opts.w1Caps&&opts.w1Caps.includes(i))||(opts.w2Caps&&opts.w2Caps.includes(i)));
+        ctx.beginPath();ctx.arc(xp(i),yp(v),isCap?5:2.5,0,Math.PI*2);
+        ctx.fillStyle=isCap?'#fff':ds.color;ctx.fill();
+        if(isCap){ctx.beginPath();ctx.arc(xp(i),yp(v),6,0,Math.PI*2);ctx.strokeStyle=GOLDC;ctx.lineWidth=1.5;ctx.stroke();}
+      });
+    });
+
+    for(let i=0;i<n;i+=2){
+      ctx.fillStyle='#4a6585';ctx.font='9px JetBrains Mono,monospace';ctx.textAlign='center';
+      ctx.save();ctx.translate(xp(i),PT+pH+10);ctx.rotate(-Math.PI/5);
+      ctx.textAlign='right';ctx.fillText(opts.labels[i],0,0);ctx.restore();
+    }
+    let lx=PL;
+    datasets.forEach(ds=>{
+      ctx.beginPath();ctx.setLineDash(ds.dashed?[5,3]:[]);ctx.strokeStyle=ds.color;ctx.lineWidth=2.5;
+      ctx.moveTo(lx,PT+pH+44);ctx.lineTo(lx+20,PT+pH+44);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle='#8da4c2';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='left';
+      ctx.fillText(ds.label,lx+24,PT+pH+48);lx+=ctx.measureText(ds.label).width+56;
+    });
+    canvas._state={W,H,PL,PR,PT,PB,pW,pH,n,maxV,datasets,opts};
+  }
+  render();
+
+  canvas.addEventListener('mousemove',function(e){
+    const s=canvas._state;if(!s)return;
+    const rect=canvas.getBoundingClientRect();const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+    const{PL,pW,PT,pH,n,maxV,datasets,opts,W}=s;
+    const xp=i=>PL+(i/(n-1))*pW,yp=v=>PT+pH-(v/maxV)*pH;
+    const idx=Math.round(Math.max(0,Math.min(n-1,(mx-PL)/pW*(n-1))));
+    if(mx<PL||mx>PL+pW||my<PT||my>PT+pH){render();return;}
+    render();
+    const x=xp(idx);
+    ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+    ctx.moveTo(x,PT);ctx.lineTo(x,PT+pH);ctx.stroke();ctx.setLineDash([]);
+    const lines=[HOURS_FULL[idx],...datasets.map(d=>`${d.label}: ${fmtFull(d.data[idx])}`)];
+    ctx.font='11px JetBrains Mono,monospace';
+    const bW=Math.max(...lines.map(l=>ctx.measureText(l).width))+28;
+    const bH=lines.length*20+14;
+    let bx=x+12,by=Math.max(PT,my-bH/2);
+    if(bx+bW>W-8)bx=x-bW-12;
+    ctx.fillStyle='#131a24';ctx.strokeStyle='#1a2840';ctx.lineWidth=1;ctx.setLineDash([]);
+    ctx.beginPath();if(ctx.roundRect)ctx.roundRect(bx,by,bW,bH,6);else ctx.rect(bx,by,bW,bH);
+    ctx.fill();ctx.stroke();
+    lines.forEach((l,i)=>{
+      ctx.fillStyle=i===0?'#fff':(i===1?W1C:W2C);
+      ctx.font=i===0?'bold 11px JetBrains Mono,monospace':'11px JetBrains Mono,monospace';
+      ctx.textAlign='left';ctx.fillText(l,bx+14,by+18+i*20);
+    });
+  });
+  canvas.addEventListener('mouseleave',render);
+  window.addEventListener('resize',()=>setTimeout(render,60));
+}
+
+/* ── BAR CHART ── */
+function drawBarChart(id,w1d,w2d,labels){
+  const canvas=document.getElementById(id);if(!canvas)return;
+  canvas.style.width='100%';canvas.style.height='100%';
+  const dpr=window.devicePixelRatio||1;const ctx=canvas.getContext('2d');
+
+  function render(){
+    const W=canvas.offsetWidth,H=canvas.offsetHeight;
+    canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
+    const PL=56,PR=16,PT=20,PB=54;
+    const pW=W-PL-PR,pH=H-PT-PB,n=labels.length;
+    const maxV=Math.max(...w1d,...w2d)*1.15;
+    const yp=v=>PT+pH-(v/maxV)*pH;
+    const slotW=pW/n,barW=slotW*.3,gap=slotW*.06;
+
+    ctx.fillStyle='#0e1219';ctx.fillRect(0,0,W,H);
+    for(let g=0;g<=4;g++){
+      const v=(maxV/4)*g,y=yp(v);
+      ctx.beginPath();ctx.strokeStyle='#1a2840';ctx.lineWidth=.5;
+      ctx.moveTo(PL,y);ctx.lineTo(PL+pW,y);ctx.stroke();
+      ctx.fillStyle='#4a6585';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='right';
+      ctx.fillText(fmt(v),PL-6,y+4);
+    }
+    labels.forEach((lbl,i)=>{
+      const cx=PL+i*slotW+slotW/2;const x1=cx-barW-gap/2,x2=cx+gap/2;
+      // W1
+      const h1=Math.max(2,(w1d[i]/maxV)*pH);
+      ctx.fillStyle=W1C+'cc';
+      if(ctx.roundRect){ctx.beginPath();ctx.roundRect(x1,yp(w1d[i]),barW,h1,3);ctx.fill();}
+      else ctx.fillRect(x1,yp(w1d[i]),barW,h1);
+      // W2
+      const h2=Math.max(2,(w2d[i]/maxV)*pH);
+      ctx.fillStyle=W2C+'cc';
+      if(ctx.roundRect){ctx.beginPath();ctx.roundRect(x2,yp(w2d[i]),barW,h2,3);ctx.fill();}
+      else ctx.fillRect(x2,yp(w2d[i]),barW,h2);
+
+      ctx.font='bold 10px JetBrains Mono,monospace';ctx.textAlign='center';
+      ctx.fillStyle=W1C;ctx.fillText(fmt(w1d[i]),x1+barW/2,yp(w1d[i])-5);
+      ctx.fillStyle=W2C;ctx.fillText(fmt(w2d[i]),x2+barW/2,yp(w2d[i])-5);
+      ctx.fillStyle='#8da4c2';ctx.font='11px JetBrains Mono,monospace';
+      ctx.fillText(lbl,cx,PT+pH+16);
+    });
+    let lx=PL;
+    [[W1C,'W1 (29 Mar–4 Apr)'],[W2C,'W2 (5–11 Apr)']].forEach(([c,l])=>{
+      ctx.fillStyle=c+'cc';ctx.fillRect(lx,PT+pH+30,14,9);
+      ctx.fillStyle='#8da4c2';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='left';
+      ctx.fillText(l,lx+20,PT+pH+39);lx+=ctx.measureText(l).width+42;
+    });
+  }
+  render();window.addEventListener('resize',()=>setTimeout(render,60));
+}
+
+/* ── EVENING CHART ── */
+function drawEveningChart(){
+  const canvas=document.getElementById('evening_chart');if(!canvas)return;
+  canvas.style.width='100%';canvas.style.height='100%';
+  const dpr=window.devicePixelRatio||1;const ctx=canvas.getContext('2d');
+  const eveHours=[18,19,20,21];const eveLabels=['6 PM','7 PM','8 PM','9 PM'];
+  const dayColors=['#00d4ff','#a3e635','#fbbf24','#ef4444','#2dd4bf'];
+
+  function render(){
+    const W=canvas.offsetWidth,H=canvas.offsetHeight;
+    canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
+    const PL=56,PR=16,PT=24,PB=60;
+    const pW=W-PL-PR,pH=H-PT-PB;
+    const dayData=DATA.d2_sl.map(sl=>eveHours.map(h=>sl[h]));
+    const maxV=Math.max(...dayData.flat())*1.25||100;
+    const yp=v=>PT+pH-(v/maxV)*pH;
+
+    ctx.fillStyle='#0e1219';ctx.fillRect(0,0,W,H);
+    for(let g=0;g<=4;g++){
+      const v=(maxV/4)*g,y=yp(v);
+      ctx.beginPath();ctx.strokeStyle='#1a2840';ctx.lineWidth=.5;
+      ctx.moveTo(PL,y);ctx.lineTo(PL+pW,y);ctx.stroke();
+      ctx.fillStyle='#4a6585';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='right';
+      ctx.fillText(fmt(v),PL-6,y+4);
+    }
+
+    const nSlots=4,slotW=pW/nSlots,nBars=5,totalBarArea=slotW*.82,barW=totalBarArea/nBars;
+    eveLabels.forEach((lbl,si)=>{
+      const slotX=PL+si*slotW,startX=slotX+(slotW-totalBarArea)/2;
+      DAYS.forEach((day,di)=>{
+        const val=dayData[di][si],x=startX+di*barW;
+        const h=Math.max(1,(val/maxV)*pH);
+        ctx.fillStyle=dayColors[di]+'cc';
+        if(ctx.roundRect){ctx.beginPath();ctx.roundRect(x,yp(val),barW-3,h,3);ctx.fill();}
+        else ctx.fillRect(x,yp(val),barW-3,h);
+        if(val>50){ctx.fillStyle=dayColors[di];ctx.font='bold 9px JetBrains Mono,monospace';ctx.textAlign='center';
+        ctx.fillText(fmt(val),x+barW/2-1,yp(val)-4);}
+      });
+      ctx.fillStyle='#8da4c2';ctx.font='11px JetBrains Mono,monospace';ctx.textAlign='center';
+      ctx.fillText(lbl,slotX+slotW/2,PT+pH+16);
+    });
+
+    let lx=PL;
+    DAYS.forEach((d,i)=>{
+      ctx.fillStyle=dayColors[i]+'cc';ctx.fillRect(lx,PT+pH+34,12,8);
+      ctx.fillStyle='#8da4c2';ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='left';
+      ctx.fillText(d,lx+16,PT+pH+42);lx+=ctx.measureText(d).width+32;
+    });
+  }
+  render();window.addEventListener('resize',()=>setTimeout(render,60));
+}
+
+/* ── HEATMAP ── */
+function buildHeatmap(){
+  const tbl=document.getElementById('heatmap_table');if(!tbl)return;
+  const pmIdx=[12,13,14,15,16,17,18,19,20,21];
+  const pmLabels=['12 PM','1 PM','2 PM ⚡','3 PM','4 PM','5 PM ⚡','6 PM','7 PM','8 PM','9 PM'];
+  const w1D=DATA.d1_sp,w2D=DATA.d2_sp;
+
+  function cellBg(val,max){
+    if(val===0)return'#07090d';
+    const r=Math.min(val/max,1);
+    if(r<.04)return`rgba(239,68,68,${.15+r*3})`;
+    if(r<.12)return`rgba(239,68,68,${.2+r*2})`;
+    if(r<.3)return`rgba(251,191,36,${.2+r*1.5})`;
+    return`rgba(163,230,53,${.25+r*.65})`;
+  }
+  function cellTx(val,max){return val===0?'#4a6585':Math.min(val/max,1)>.12?'#07090d':'#e4eaf4';}
+
+  const allV=[...w1D.flatMap(d=>pmIdx.map(i=>d[i])),...w2D.flatMap(d=>pmIdx.map(i=>d[i]))];
+  const mx=Math.max(...allV);
+
+  let h='<thead><tr><th style="text-align:left">Hour</th>';
+  DAYS.forEach(d=>{h+=`<th colspan="2">${d}</th>`;});
+  h+='</tr><tr><th></th>';
+  DAYS.forEach(()=>{h+=`<th style="color:${W1C};font-size:9px;">W1</th><th style="color:${W2C};font-size:9px;">W2</th>`;});
+  h+='</tr></thead><tbody>';
+
+  pmIdx.forEach((hi,ri)=>{
+    h+=`<tr><td class="hr">${pmLabels[ri]}</td>`;
+    DAYS.forEach((_,di)=>{
+      const v1=w1D[di][hi],v2=w2D[di][hi];
+      const f=v=>v>0?(v>=1000?'$'+(v/1000).toFixed(1)+'k':'$'+v):'—';
+      h+=`<td style="background:${cellBg(v1,mx)};color:${cellTx(v1,mx)};">${f(v1)}</td>`;
+      h+=`<td style="background:${cellBg(v2,mx)};color:${cellTx(v2,mx)};">${f(v2)}</td>`;
+    });
+    h+='</tr>';
+  });
+  h+='</tbody>';tbl.innerHTML=h;
+}
+
+/* ── PER-DAY HOURLY CHART WITH DARK ZONES ── */
+function drawDayChart(canvasId, spendData, salesData, dayLabel){
+  const canvas=document.getElementById(canvasId);if(!canvas)return;
+  canvas.style.width='100%';canvas.style.height='100%';
+  const dpr=window.devicePixelRatio||1;const ctx=canvas.getContext('2d');
+  const hours=['12A','1A','2A','3A','4A','5A','6A','7A','8A','9A','10A','11A','12P','1P','2P','3P','4P','5P','6P','7P','8P','9P','10P','11P'];
+
+  function render(){
+    const W=canvas.offsetWidth,H=canvas.offsetHeight;
+    canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
+    const PL=48,PR=10,PT=16,PB=40;
+    const pW=W-PL-PR,pH=H-PT-PB,n=24;
+    const maxSp=Math.max(...spendData)*1.15||100;
+    const maxSl=Math.max(...salesData)*1.15||100;
+    const xp=i=>PL+(i/(n-1))*pW;
+    const ypSp=v=>PT+pH-(v/maxSp)*pH;
+    const ypSl=v=>PT+pH-(v/maxSl)*pH;
+
+    ctx.fillStyle='#0e1219';ctx.fillRect(0,0,W,H);
+
+    // dark zone bands (spend < 50)
+    for(let i=0;i<n;i++){
+      if(spendData[i]<50){
+        const x1=i===0?PL:xp(i)-((xp(1)-xp(0))/2);
+        const x2=i===n-1?PL+pW:xp(i)+((xp(1)-xp(0))/2);
+        ctx.fillStyle='rgba(239,68,68,0.08)';
+        ctx.fillRect(x1,PT,x2-x1,pH);
+        // red tick at bottom
+        ctx.fillStyle='rgba(239,68,68,0.5)';
+        ctx.fillRect(x1,PT+pH-2,x2-x1,2);
+      }
+    }
+
+    // grid lines
+    for(let g=0;g<=3;g++){
+      const v=(maxSl/3)*g,y=ypSl(v);
+      ctx.beginPath();ctx.strokeStyle='#1a2840';ctx.lineWidth=.4;
+      ctx.moveTo(PL,y);ctx.lineTo(PL+pW,y);ctx.stroke();
+      ctx.fillStyle='#4a6585';ctx.font='9px JetBrains Mono,monospace';ctx.textAlign='right';
+      ctx.fillText(fmt(v),PL-5,y+3);
+    }
+
+    // Ad Sales area + line (cyan)
+    ctx.beginPath();ctx.moveTo(xp(0),ypSl(salesData[0]));
+    for(let i=1;i<n;i++)ctx.lineTo(xp(i),ypSl(salesData[i]));
+    ctx.lineTo(xp(n-1),PT+pH);ctx.lineTo(xp(0),PT+pH);ctx.closePath();
+    const gSl=ctx.createLinearGradient(0,PT,0,PT+pH);
+    gSl.addColorStop(0,'rgba(0,212,255,0.2)');gSl.addColorStop(1,'rgba(0,212,255,0)');
+    ctx.fillStyle=gSl;ctx.fill();
+    ctx.beginPath();ctx.strokeStyle=W1C;ctx.lineWidth=2;
+    ctx.moveTo(xp(0),ypSl(salesData[0]));
+    for(let i=1;i<n;i++)ctx.lineTo(xp(i),ypSl(salesData[i]));
+    ctx.stroke();
+
+    // Ad Spend area + line (lime)
+    ctx.beginPath();ctx.moveTo(xp(0),ypSp(spendData[0]));
+    for(let i=1;i<n;i++)ctx.lineTo(xp(i),ypSp(spendData[i]));
+    ctx.lineTo(xp(n-1),PT+pH);ctx.lineTo(xp(0),PT+pH);ctx.closePath();
+    const gSp=ctx.createLinearGradient(0,PT,0,PT+pH);
+    gSp.addColorStop(0,'rgba(163,230,53,0.15)');gSp.addColorStop(1,'rgba(163,230,53,0)');
+    ctx.fillStyle=gSp;ctx.fill();
+    ctx.beginPath();ctx.strokeStyle=W2C;ctx.lineWidth=2;
+    ctx.moveTo(xp(0),ypSp(spendData[0]));
+    for(let i=1;i<n;i++)ctx.lineTo(xp(i),ypSp(spendData[i]));
+    ctx.stroke();
+
+    // dots on key hours
+    spendData.forEach((v,i)=>{
+      if(v<50&&i>=12&&i<=21){
+        // red dot for dead PM hours
+        ctx.beginPath();ctx.arc(xp(i),ypSp(v),4,0,Math.PI*2);
+        ctx.fillStyle=REDC;ctx.fill();
+        ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();
+      }
+    });
+
+    // x labels (every 3 hours)
+    for(let i=0;i<n;i+=3){
+      ctx.fillStyle='#4a6585';ctx.font='9px JetBrains Mono,monospace';ctx.textAlign='center';
+      ctx.fillText(hours[i],xp(i),PT+pH+14);
+    }
+
+    // legend
+    ctx.fillStyle=W2C;ctx.fillRect(PL,PT+pH+24,12,3);
+    ctx.fillStyle='#8da4c2';ctx.font='9px JetBrains Mono,monospace';ctx.textAlign='left';
+    ctx.fillText('Ad Spend',PL+16,PT+pH+28);
+    ctx.fillStyle=W1C;ctx.fillRect(PL+90,PT+pH+24,12,3);
+    ctx.fillText('Ad Sales',PL+106,PT+pH+28);
+    ctx.fillStyle=REDC+'88';ctx.fillRect(PL+180,PT+pH+22,12,7);
+    ctx.fillStyle='#8da4c2';ctx.fillText('Budget dead',PL+196,PT+pH+28);
+
+    canvas._dayState={W,H,PL,PR,PT,PB,pW,pH,n,maxSp,maxSl,spendData,salesData};
+  }
+  render();
+
+  // tooltip
+  canvas.addEventListener('mousemove',function(e){
+    const s=canvas._dayState;if(!s)return;
+    const rect=canvas.getBoundingClientRect();const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+    const{PL,pW,PT,pH,n,spendData,salesData,W}=s;
+    const xp=i=>PL+(i/(n-1))*pW;
+    const idx=Math.round(Math.max(0,Math.min(n-1,(mx-PL)/pW*(n-1))));
+    if(mx<PL||mx>PL+pW||my<PT||my>PT+pH){render();return;}
+    render();
+    const x=xp(idx);
+    ctx.beginPath();ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+    ctx.moveTo(x,PT);ctx.lineTo(x,PT+pH);ctx.stroke();ctx.setLineDash([]);
+    const isDead=spendData[idx]<50;
+    const lines=[
+      HOURS_FULL[idx]+(isDead?' ⛔ DARK':''),
+      'Spend: '+fmtFull(spendData[idx]),
+      'Sales: '+fmtFull(salesData[idx])
+    ];
+    ctx.font='11px JetBrains Mono,monospace';
+    const bW=Math.max(...lines.map(l=>ctx.measureText(l).width))+24;
+    const bH=lines.length*18+12;
+    let bx=x+10,by=Math.max(PT,my-bH/2);
+    if(bx+bW>W-8)bx=x-bW-10;
+    ctx.fillStyle=isDead?'#1c1014':'#131a24';
+    ctx.strokeStyle=isDead?'rgba(239,68,68,0.4)':'#1a2840';
+    ctx.lineWidth=1;
+    ctx.beginPath();if(ctx.roundRect)ctx.roundRect(bx,by,bW,bH,6);else ctx.rect(bx,by,bW,bH);
+    ctx.fill();ctx.stroke();
+    ctx.fillStyle=isDead?REDC:'#fff';ctx.font='bold 11px JetBrains Mono,monospace';ctx.textAlign='left';
+    ctx.fillText(lines[0],bx+12,by+16);
+    ctx.fillStyle=W2C;ctx.font='11px JetBrains Mono,monospace';ctx.fillText(lines[1],bx+12,by+34);
+    ctx.fillStyle=W1C;ctx.fillText(lines[2],bx+12,by+52);
+  });
+  canvas.addEventListener('mouseleave',render);
+  window.addEventListener('resize',()=>setTimeout(render,60));
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',function(){
+  drawLineChart('wow_spend',[
+    {data:DATA.w1_spend,color:W1C,label:'W1 (29 Mar–4 Apr)',dashed:false},
+    {data:DATA.w2_spend,color:W2C,label:'W2 (5–11 Apr)',dashed:true}
+  ],{labels:HOURS,w1Caps:W1_CAPS,w2Caps:W2_CAPS});
+
+  drawLineChart('wow_sales',[
+    {data:DATA.w1_sales,color:W1C,label:'W1 (29 Mar–4 Apr)',dashed:false},
+    {data:DATA.w2_sales,color:W2C,label:'W2 (5–11 Apr)',dashed:true}
+  ],{labels:HOURS,w1Caps:W1_CAPS,w2Caps:W2_CAPS});
+
+  drawBarChart('day_spend',d1_totSp,d2_totSp,DAYS);
+  drawBarChart('day_sales',d1_totSl,d2_totSl,DAYS);
+  buildHeatmap();
+  drawEveningChart();
+
+  // Per-day hourly charts
+  drawDayChart('day_mon',DATA.d2_sp[0],DATA.d2_sl[0],'Mon 6 Apr');
+  drawDayChart('day_tue',DATA.d2_sp[1],DATA.d2_sl[1],'Tue 7 Apr');
+  drawDayChart('day_wed',DATA.d2_sp[2],DATA.d2_sl[2],'Wed 8 Apr');
+  drawDayChart('day_thu',DATA.d2_sp[3],DATA.d2_sl[3],'Thu 9 Apr');
+  drawDayChart('day_fri',DATA.d2_sp[4],DATA.d2_sl[4],'Fri 10 Apr');
+});
+</script>
+</body>
+</html>
